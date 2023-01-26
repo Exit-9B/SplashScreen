@@ -5,6 +5,7 @@
 class SplashWindow
 {
 public:
+	static bool IsInitialized();
 	static void Initialize();
 	static void Dismiss();
 

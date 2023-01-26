@@ -1,6 +1,11 @@
 #include "SplashWindow.h"
 #include "SplashImage.h"
 
+bool SplashWindow::IsInitialized()
+{
+	return _splash != NULL;
+}
+
 void SplashWindow::Initialize()
 {
 	if (_splash) {

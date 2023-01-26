@@ -107,13 +107,8 @@ extern "C" DLLEXPORT bool SKSEAPI
 
 extern "C" DLLEXPORT void APIENTRY Initialize()
 {
-	static bool initialized = false;
-	if (!initialized) {
-		initialized = true;
-	}
-	else {
+	if (SplashWindow::IsInitialized())
 		return;
-	}
 
 	InitializeLog();
 	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());
