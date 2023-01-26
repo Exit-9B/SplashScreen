@@ -107,18 +107,25 @@ extern "C" DLLEXPORT bool SKSEAPI
 
 extern "C" DLLEXPORT void APIENTRY Initialize()
 {
+	static bool initialized = false;
+	if (!initialized) {
+		initialized = true;
+	}
+	else {
+		return;
+	}
+
+	InitializeLog();
+	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());
+
 	SplashWindow::Initialize();
 }
 
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 {
-	InitializeLog();
-	logger::info("{} v{}"sv, Plugin::NAME, Plugin::VERSION.string());
+	Initialize();
 
 	SKSE::Init(a_skse);
-
-	SplashWindow::Initialize();
-
 	SKSE::GetMessagingInterface()->RegisterListener(
 		[](auto a_msg)
 		{
