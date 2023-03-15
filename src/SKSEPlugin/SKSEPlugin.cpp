@@ -4,16 +4,6 @@ namespace
 {
 	inline static std::optional<std::filesystem::path> LogDirectory;
 
-	std::optional<std::filesystem::path> GetLogDirectory()
-	{
-		if (LogDirectory.has_value()) {
-			return LogDirectory.value();
-		}
-		else {
-			return logger::log_directory();
-		}
-	}
-
 	void FindLogDirectory(REL::Version a_ver)
 	{
 		wchar_t* buffer{ nullptr };
@@ -35,6 +25,9 @@ namespace
 		if (a_ver == SKSE::RUNTIME_VR_1_4_15_1) {
 			path /= "Skyrim VR"sv;
 		}
+		else if (::GetModuleHandle("Galaxy64.dll")) {
+			path /= "Skyrim Special Edition GOG"sv;
+		}
 		else {
 			path /= "Skyrim Special Edition"sv;
 		}
@@ -42,6 +35,15 @@ namespace
 		path /= "SKSE"sv;
 
 		LogDirectory = path;
+	}
+
+	std::optional<std::filesystem::path> GetLogDirectory()
+	{
+		if (!LogDirectory.has_value()) {
+			FindLogDirectory(SKSE::RUNTIME_LATEST);
+		}
+
+		return LogDirectory;
 	}
 
 	void InitializeLog()
@@ -81,7 +83,8 @@ extern "C" DLLEXPORT constinit auto SKSEPlugin_Version = []()
 	v.PluginName(Plugin::NAME);
 	v.AuthorName("Parapets"sv);
 
-	v.UsesAddressLibrary(true);
+	v.UsesAddressLibrary(false);
+	v.UsesSigScanning(true);
 	v.HasNoStructUse(true);
 	v.UsesStructsPost629(false);
 
